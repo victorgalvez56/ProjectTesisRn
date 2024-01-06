@@ -35,6 +35,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NativeBaseProvider, extendTheme } from 'native-base';
 import LoginScreen from './src/screens/LoginScreen';
 import { NavigationContainer } from '@react-navigation/native';
+import SceneNames from './src/navigation/SceneNames';
+import CoursesScreen from './src/screens/CoursesScreen';
+import CaseFirstScreen from './src/screens/CaseFirstScreen';
+import CaseFinishScreen from './src/screens/CaseFinishScreen';
 
 // const HelloWorldSceneAR = () => {
 //   const [text, setText] = useState('Initializing AR...');
@@ -67,8 +71,23 @@ function App(): JSX.Element {
   const authScreens = () => (
     <>
       <Stack.Screen
-        name={"LoginScreen"}
+        name={SceneNames.LoginScreen}
         component={LoginScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={SceneNames.CoursesScreen}
+        component={CoursesScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={SceneNames.CaseFirstScreen}
+        component={CaseFirstScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={SceneNames.CaseFinishScreen}
+        component={CaseFinishScreen}
         options={{ headerShown: false }}
       />
     </>

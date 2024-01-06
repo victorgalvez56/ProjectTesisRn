@@ -5,9 +5,13 @@ import { loginService } from '../services/AuthService';
 import LoaderElement from '../components/LoaderElement';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import SceneNames from '../navigation/SceneNames';
+import { GenericStackNavigationProp } from '../navigation/StackNavigationProp';
 
 
 const LoginScreen = () => {
+    const { navigate } = useNavigation<GenericStackNavigationProp>();
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [loading, setLoading] = useState(false)
@@ -23,6 +27,7 @@ const LoginScreen = () => {
                             name, email
                         }))
                         setLoading(false)
+                        navigate(SceneNames.CaseFirstScreen)
                     }
                 }, (error) => { })
             } else {
