@@ -35,30 +35,30 @@ type SectionProps = PropsWithChildren<{
   title: string;
 }>;
 
-const HelloWorldSceneAR = () => {
-  const [text, setText] = useState('Initializing AR...');
+// const HelloWorldSceneAR = () => {
+//   const [text, setText] = useState('Initializing AR...');
 
-  function onInitialized(state: any, reason: any) {
-    console.log('guncelleme', state, reason);
-    if (state === ViroTrackingStateConstants.TRACKING_NORMAL) {
-      setText('Hello World!');
-    }
-    // else if (state === ViroConstants.TRACKING_NONE) {
-    //   // Handle loss of tracking
-    // }
-  }
+//   function onInitialized(state: any, reason: any) {
+//     console.log('guncelleme', state, reason);
+//     if (state === ViroTrackingStateConstants.TRACKING_NORMAL) {
+//       setText('Hello World!');
+//     }
+//     // else if (state === ViroConstants.TRACKING_NONE) {
+//     //   // Handle loss of tracking
+//     // }
+//   }
 
-  return (
-    <ViroARScene onTrackingUpdated={onInitialized}>
-      <ViroText
-        text={text}
-        scale={[0.5, 0.5, 0.5]}
-        position={[0, 0, -1]}
-        style={styles.helloWorldTextStyle}
-      />
-    </ViroARScene>
-  );
-};
+//   return (
+//     <ViroARScene onTrackingUpdated={onInitialized}>
+//       <ViroText
+//         text={text}
+//         scale={[0.5, 0.5, 0.5]}
+//         position={[0, 0, -1]}
+//         style={styles.helloWorldTextStyle}
+//       />
+//     </ViroARScene>
+//   );
+// };
 
 function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -68,13 +68,15 @@ function App(): JSX.Element {
   };
 
   return (
-    <ViroARSceneNavigator
-      autofocus={true}
-      initialScene={{
-        scene: HelloWorldSceneAR,
-      }}
-      style={styles.f1}
-    />
+    <>
+    </>
+    // <ViroARSceneNavigator
+    //   autofocus={true}
+    //   initialScene={{
+    //     scene: HelloWorldSceneAR,
+    //   }}
+    //   style={styles.f1}
+    // />
   );
 }
 
