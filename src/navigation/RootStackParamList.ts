@@ -3,4 +3,5 @@ export type RootStackParamList = {
   CoursesScreen: undefined;
   CaseFirstScreen: undefined;
   CaseFinishScreen: undefined;
+  PasScreen: undefined;
 };

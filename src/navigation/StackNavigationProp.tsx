@@ -20,3 +20,7 @@ export type CaseFinishScreen = NativeStackNavigationProp<
     RootStackParamList,
     SceneNames.CaseFinishScreen
 >;
+export type PasScreen = NativeStackNavigationProp<
+    RootStackParamList,
+    SceneNames.PasScreen
+>;

@@ -3,8 +3,12 @@ import { icons } from '../assets/icons/icons';
 import { useEffect, useRef, useState } from 'react';
 import SceneNames from '../navigation/SceneNames';
 import { colors } from '../assets/Colors';
+import { useNavigation } from '@react-navigation/native';
+import { GenericStackNavigationProp } from '../navigation/StackNavigationProp';
 
 const CoursesScreen = () => {
+    const { navigate } = useNavigation<GenericStackNavigationProp>();
+
     return (
         <Box safeArea bg={"#FFEAA4"}
         >
@@ -32,7 +36,7 @@ const CoursesScreen = () => {
             >
 
                 <Button
-                    // onPress={navigate(SceneNames.)}
+                    onPress={() => navigate(SceneNames.PasScreen)}
                     justifyContent={"flex-start"}
                     rounded={10}
                     w={'100%'}

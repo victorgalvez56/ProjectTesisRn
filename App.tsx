@@ -39,6 +39,7 @@ import SceneNames from './src/navigation/SceneNames';
 import CoursesScreen from './src/screens/CoursesScreen';
 import CaseFirstScreen from './src/screens/CaseFirstScreen';
 import CaseFinishScreen from './src/screens/CaseFinishScreen';
+import PasScreen from './src/screens/PasScreen';
 
 // const HelloWorldSceneAR = () => {
 //   const [text, setText] = useState('Initializing AR...');
@@ -71,6 +72,11 @@ function App(): JSX.Element {
   const authScreens = () => (
     <>
       <Stack.Screen
+        name={SceneNames.PasScreen}
+        component={PasScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
         name={SceneNames.LoginScreen}
         component={LoginScreen}
         options={{ headerShown: false }}
@@ -90,6 +96,11 @@ function App(): JSX.Element {
         component={CaseFinishScreen}
         options={{ headerShown: false }}
       />
+      {/* <Stack.Screen
+        name={SceneNames.PasScreen}
+        component={PasScreen}
+        options={{ headerShown: false }}
+      /> */}
     </>
   );
   return (
