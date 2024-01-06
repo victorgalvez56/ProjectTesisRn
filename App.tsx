@@ -31,9 +31,10 @@ import {
   ViroARSceneNavigator,
   ViroARTrackingReasonConstants
 } from '@viro-community/react-viro';
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NativeBaseProvider, extendTheme } from 'native-base';
+import LoginScreen from './src/screens/LoginScreen';
+import { NavigationContainer } from '@react-navigation/native';
 
 // const HelloWorldSceneAR = () => {
 //   const [text, setText] = useState('Initializing AR...');
@@ -61,15 +62,25 @@ type SectionProps = PropsWithChildren<{
 // };
 
 function App(): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+  const Stack = createNativeStackNavigator();
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
+  const authScreens = () => (
     <>
+      <Stack.Screen
+        name={"LoginScreen"}
+        component={LoginScreen}
+        options={{ headerShown: false }}
+      />
     </>
+  );
+  return (
+    <NativeBaseProvider>
+      <NavigationContainer>
+        <Stack.Navigator>
+          {authScreens()}
+        </Stack.Navigator>
+      </NavigationContainer>
+    </NativeBaseProvider>
     // <ViroARSceneNavigator
     //   autofocus={true}
     //   initialScene={{
