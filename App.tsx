@@ -42,6 +42,7 @@ import CaseFinishScreen from './src/screens/CaseFinishScreen';
 import PasScreen from './src/screens/PasScreen';
 import WoundsScreen from './src/screens/WoundsScreen';
 import ViroScreen from './src/screens/ViroScreen';
+import FloatingElement from './src/components/FloatingElement';
 
 function App(): JSX.Element {
   const Stack = createNativeStackNavigator();
@@ -49,10 +50,11 @@ function App(): JSX.Element {
   const authScreens = () => (
     <>
       <Stack.Screen
-        name={SceneNames.ViroScreen}
-        component={ViroScreen}
+        name={SceneNames.CaseFinishScreen}
+        component={CaseFinishScreen}
         options={{ headerShown: false }}
       />
+      {/* 
       <Stack.Screen
         name={SceneNames.LoginScreen}
         component={LoginScreen}
@@ -68,11 +70,7 @@ function App(): JSX.Element {
         component={CaseFirstScreen}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
-        name={SceneNames.CaseFinishScreen}
-        component={CaseFinishScreen}
-        options={{ headerShown: false }}
-      />
+
       <Stack.Screen
         name={SceneNames.WoundsScreen}
         component={WoundsScreen}
@@ -82,7 +80,12 @@ function App(): JSX.Element {
         name={SceneNames.PasScreen}
         component={PasScreen}
         options={{ headerShown: false }}
-      />
+      /> */}
+      {/* <Stack.Screen
+        name={SceneNames.ViroScreen}
+        component={ViroScreen}
+        options={{ headerShown: false }}
+      /> */}
     </>
   );
   return (

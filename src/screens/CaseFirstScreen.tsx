@@ -140,7 +140,7 @@ const CaseFirstScreen = () => {
         return () => clearInterval(interval);
     }, [start, seconds, minutes, hours]); //
 
-    const iniciarCronometro = () => {
+    const startChrono = () => {
         if (!start) {
             setStart(true);
         }
@@ -162,7 +162,7 @@ const CaseFirstScreen = () => {
                     } resizeMode="stretch" alt="Alternate Text" size={'2xl'} />
 
                     <Button onPress={() => {
-                        iniciarCronometro()
+                        startChrono()
                         setVisibleFirstModal(true)
                     }
                     }

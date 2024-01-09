@@ -1,31 +1,33 @@
-import { Box, Center, ChevronLeftIcon, HStack, Image, Modal, Stack, Text, VStack } from 'native-base';
+import { Box, Button, Center, ChevronLeftIcon, HStack, Image, Modal, ScrollView, Stack, Text, VStack } from 'native-base';
 import { icons } from '../assets/icons/icons';
 import { colors } from '../assets/Colors';
 import { useEffect, useRef, useState } from 'react';
 import { uploadQuestion } from '../services/AuthService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+import { GenericStackNavigationProp } from '../navigation/StackNavigationProp';
+import SceneNames from '../navigation/SceneNames';
+import LoaderElement from '../components/LoaderElement';
 
 const CaseFinishScreen = () => {
-    const [segundos, setSegundos] = useState(0);
-    const [minutos, setMinutos] = useState(0);
-    const [horas, setHoras] = useState(0);
+    const { navigate } = useNavigation<GenericStackNavigationProp>();
+    const [seconds, setSecons] = useState(0);
+    const [minutes, setMinutes] = useState(0);
+    const [hours, setHours] = useState(0);
     const [start, setStart] = useState(false);
     const [visibleFirstModal, setVisibleFirstModal] = useState(false);
-    const [finishCase, setFinishCase] = useState(false);
     const [step, setStep] = useState(1);
     const initialRef = useRef(null);
     const finalRef = useRef(null);
-    const spline = useRef();
-    const onLoad = (splineApp: any) => {
-        spline.current = splineApp;
-    }
+    const [firstQuestion,] = useState("¿Qué es lo que primero debemos hacer?");
+    const [secondQuestion,] = useState("¿Qué sigue después del primer paso?");
+    const [thirdQuestion,] = useState("¿Que debemos hacer cuando ya se tiene la herida de Armando desinfectada?");
+    const [fourthQuestion,] = useState("¿Cuándo la herida de Armando se encuentra desinfectada y limpia que debemos hacer?");
+    const [fifthQuestion,] = useState("¿Debemos hecharle alcohol a la herida de Armando?");
+    const [loading, setLoading] = useState(false)
+    const [finishCase, setFinishCase] = useState(false);
+    const [selectedOption, setSelectedOption] = useState(false);
 
-
-    const [firstQuestion, setFirstQuestion] = useState("¿Qué es lo que primero debemos hacer?");
-    const [secondQuestion, setSecondQuestion] = useState("¿Qué sigue después del primer paso?");
-    const [thirdQuestion, setThirdQuestion] = useState("¿Que debemos hacer cuando ya se tiene la herida de Armando desinfectada?");
-    const [fourthQuestion, setFourthQuestion] = useState("¿Cuándo la herida de Armando se encuentra desinfectada y limpia que debemos hacer?");
-    const [fifthQuestion, setFifthQuestion] = useState("¿Debemos hecharle alcohol a la herida de Armando?");
 
     const [firstRequest, setFirstRequest] = useState([
         { text: "a) Calmar a Armando y llevarlo a una zona segura para realizar los primeros auxilios.", selected: false },
@@ -55,25 +57,23 @@ const CaseFinishScreen = () => {
         { text: "a) SI", selected: false },
         { text: "b) NO", selected: false }])
 
-    const [selectedOption, setSelectedOption] = useState(false);
-
-
     const handleNext = async () => {
+        setLoading(true)
+        const userStorage = await AsyncStorage.getItem('user') || "[]"
         if (selectedOption) {
-            const userStorage = await AsyncStorage.getItem('user') || "[]"
             const user = JSON.parse(userStorage)
             const data = {
                 username: user.name,
                 type: "finish",
-                chronometer: horas.toString().padStart(2, '0')
-                    + ":" + minutos.toString().padStart(2, '0') + ":" + segundos.toString().padStart(2, '0'),
+                chronometer: hours.toString().padStart(2, '0')
+                    + ":" + minutes.toString().padStart(2, '0') + ":" + seconds.toString().padStart(2, '0'),
 
             }
             if (step === 1) {
                 const firstRequestFinded = firstRequest.find(first => first.selected === true);
                 await uploadQuestion({
                     ...data, question: firstQuestion,
-                    response: firstRequestFinded?.text || "algo malo pasó"
+                    response: firstRequestFinded?.text || "wrong"
                 },
                     (response) => { console.log(response) },
                     (error) => { console.error(error) })
@@ -82,7 +82,7 @@ const CaseFinishScreen = () => {
                 const secondRequestFinded = secondRequest.find(second => second.selected === true);
                 await uploadQuestion({
                     ...data, question: secondQuestion,
-                    response: secondRequestFinded?.text || "algo malo pasó"
+                    response: secondRequestFinded?.text || "wrong"
                 },
                     (response) => { console.log(response) },
                     (error) => { console.error(error) })
@@ -90,7 +90,7 @@ const CaseFinishScreen = () => {
                 const thirdRequestFinded = thirdRequest.find(third => third.selected === true);
                 await uploadQuestion({
                     ...data, question: thirdQuestion,
-                    response: thirdRequestFinded?.text || "algo malo pasó"
+                    response: thirdRequestFinded?.text || "wrong"
                 },
                     (response) => { console.log(response) },
                     (error) => { console.error(error) })
@@ -98,7 +98,7 @@ const CaseFinishScreen = () => {
                 const fourthRequestFinded = fourthRequest.find(fourth => fourth.selected === true);
                 await uploadQuestion({
                     ...data, question: fourthQuestion,
-                    response: fourthRequestFinded?.text || "algo malo pasó"
+                    response: fourthRequestFinded?.text || "wrong"
                 },
                     (response) => { console.log(response) },
                     (error) => { console.error(error) })
@@ -106,11 +106,15 @@ const CaseFinishScreen = () => {
                 const fifthRequestFinded = fifthRequest.find(fifth => fifth.selected === true);
                 await uploadQuestion({
                     ...data, question: fifthQuestion,
-                    response: fifthRequestFinded?.text || "algo malo pasó"
+                    response: fifthRequestFinded?.text || "wrong"
                 },
                     (response) => { console.log(response) },
                     (error) => { console.error(error) })
-
+                setStep(1)
+                setVisibleFirstModal(false)
+                setSecons(0)
+                setMinutes(0)
+                setHours(0)
                 setStart(false)
                 setVisibleFirstModal(false)
                 setFinishCase(true)
@@ -118,183 +122,229 @@ const CaseFinishScreen = () => {
             setSelectedOption(false)
             setStep(prevStep => prevStep < 5 ? prevStep + 1 : prevStep);
         }
+        setLoading(false)
     };
     useEffect(() => {
         let interval: any;
         if (start) {
             interval = setInterval(() => {
-                setSegundos((segundos) => segundos + 1);
-                if (segundos === 59) {
-                    setMinutos((minutos) => minutos + 1);
-                    setSegundos(0);
+                setSecons((seconds) => seconds + 1);
+                if (seconds === 59) {
+                    setMinutes((minutes) => minutes + 1);
+                    setSecons(0);
                 }
-                if (minutos === 59) {
-                    setHoras((horas) => horas + 1);
-                    setMinutos(0);
+                if (minutes === 59) {
+                    setHours((hours) => hours + 1);
+                    setMinutes(0);
                 }
             }, 1000);
         }
         return () => clearInterval(interval);
-    }, [start, segundos, minutos, horas]); //
+    }, [start, seconds, minutes, hours]); //
 
-    const iniciarCronometro = () => {
+    const startChrono = () => {
         if (!start) {
             setStart(true);
         }
     };
     return (
-        <Box bg={colors.text.secondary} w={'100vw'} h={'100vh'} alignItems={'center'} p={6}>
-            {/* <Box bg={colors.text.secondary} alignItems={'center'} borderColor={colors.text.primary} rounded={16} borderWidth={2} w={'full'} h={'full'} textAlign={'justify'} p={6} justifyContent={'center'}>
-                <Box bg={colors.text.primary} rounded={10} px={10} py={4} mb={'5%'}>
-                    <Text bold fontSize={'xl'} color={colors.text.secondary}>{String(horas).padStart(2, '0')}:{String(minutos).padStart(2, '0')}:{String(segundos).padStart(2, '0')}</Text>
-                </Box>
-                <Text fontSize={26} fontWeight={'700'} color={colors.text.primary}>CASO PRÁTICO</Text>
-                {
-                    !finishCase ?
-                        <>
-                            <Text fontSize={16} fontWeight={'500'} color={colors.text.primary}>Armando, un estudiante de sexto año de primaria, disfrutaba de su tiempo libre en el patio cuando descubrió un objeto brillante en el suelo. Al intentar recogerlo para examinarlo más de cerca, se cortó levemente. En cuestión de segundos, empezó a brotar sangre.</Text>
-                            <Text fontSize={16} fontWeight={'500'} color={colors.text.primary}>Descripción de la herida:
-                                Longitud de 3 cm y profundidad superficial.</Text>
-                            <Image source={icons.heridaCaso
-                            } resizeMode="stretch" alt="Alternate Text" size={'2xl'} />
 
-                            <Button onClick={() => {
-                                iniciarCronometro()
-                                setVisibleFirstModal(true)
-                            }
-                            } style={{ backgroundColor: colors.text.third, padding: "8px", borderRadius: 15, borderColor: 'white', borderWidth: 1, marginTop: '10%' }}>
-                                <Text color={colors.text.primary} fontSize={20} fontWeight={'700'}>{"Empezar!"}</Text>
-                            </Button>
-                        </>
-                        :
-                        <>
-                            <Text fontSize={20}>Listo! culminaste el caso practico.
-                                Felicidades! </Text>
-
-                        </>
-                }
-            </Box>
-
-
-            <Modal isOpen={visibleFirstModal} size={'xl'}
-                initialFocusRef={initialRef} finalFocusRef={finalRef}
-            >
-                <Modal.Content
-                    rounded={30}
+        <Box flex={1} safeArea bg={colors.text.secondary}>
+            <HStack justifyItems={'center'}>
+                <Button onPress={() => navigate(SceneNames.CoursesScreen)} alignItems={'center'} rounded={'full'} w={10} h={10} bg={'transparent'} _pressed={{ bg: colors.text.third }}
                 >
-                    <Modal.Header>
+                    <ChevronLeftIcon
+                        size={'lg'} mt="0.5" color="white" />
+                </Button>
+            </HStack>
+            <Box w={'full'} h={'full'} alignItems={'center'} p={6}>
 
-                        <HStack space={8}
-                            justifyContent={step !== 1 ? '' : 'center'}
-                        >
-                            <Text textAlign={'center'} color={colors.text.primary} fontSize={20} bold>
-                                {step === 1 && <div>{firstQuestion}</div>}
-                                {step === 2 && <div>{secondQuestion}</div>}
-                                {step === 3 && <div>{thirdQuestion}</div>}
-                                {step === 4 && <div>{fourthQuestion}</div>}
-                                {step === 5 && <div>{fifthQuestion}</div>}
-                            </Text>
-                        </HStack>
-                    </Modal.Header>
-                    <Modal.Body>
-                        {step === 1 &&
-                            <div>
-                                {firstRequest.map((question, index) => (
-                                    <Box p={1}>
-                                        <Button onClick={async () => {
-                                            setSelectedOption(true)
-                                            const newArray = firstRequest.map((question, indexQuestion) => ({
-                                                ...question,
-                                                selected: indexQuestion === index // Establece a true solo para el objeto seleccionado, a false para los demás
-                                            }));
-                                            setFirstRequest(newArray)
-                                        }} style={{ backgroundColor: question.selected ? colors.text.third : colors.text.secondary, paddingInline: "6px", paddingTop: "10px", paddingBottom: "10px", borderRadius: 15, borderColor: 'white', borderWidth: 1, textAlign: 'start' }}>
-                                            <Text color={colors.text.primary} fontSize={14} fontWeight={'700'}>{question.text}</Text>
-                                        </Button>
+                <ScrollView>
+                    <LoaderElement isLoading={loading} />
+
+                    <Box bg={colors.text.secondary} alignItems={'center'} borderColor={colors.text.primary} rounded={16} borderWidth={2} w={'full'} h={'full'} textAlign={'justify'} p={6} justifyContent={'center'}>
+                        {
+                            !finishCase ?
+                                <>
+                                    <Box bg={colors.text.primary} rounded={10} px={10} py={4} mb={'5%'}>
+                                        <Text bold fontSize={'xl'} color={colors.text.secondary}>{String(hours).padStart(2, '0')}:{String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}</Text>
                                     </Box>
-                                ))}
-                            </div>
+                                    <Text fontSize={16} fontWeight={'500'} color={colors.text.primary}>Armando, un estudiante de sexto año de primaria, disfrutaba de su tiempo libre en el patio cuando descubrió un objeto brillante en el suelo. Al intentar recogerlo para examinarlo más de cerca, se cortó levemente. En cuestión de segundos, empezó a brotar sangre.</Text>
+                                    <Text fontSize={16} fontWeight={'500'} color={colors.text.primary}>Descripción de la herida:
+                                        Longitud de 3 cm y profundidad superficial.</Text>
+                                    <Image source={icons.heridaCaso
+                                    } resizeMode="stretch" alt="Alternate Text" size={'2xl'} />
+
+                                    <Button onPress={() => {
+                                        startChrono()
+                                        setVisibleFirstModal(true)
+                                    }
+                                    }
+                                        bg={colors.text.third}
+                                        px={6}
+                                        py={4}
+                                        rounded={8}
+                                        mt={'10%'}
+                                    >
+                                        <Text color={colors.text.primary} fontSize={20} fontWeight={'700'}>{"Empezar!"}</Text>
+                                    </Button>
+                                </>
+                                :
+                                <>
+                                    <Text fontSize={20}>Listo! culminaste el caso practico.
+                                        Felicidades! </Text>
+
+                                </>
                         }
-                        {step === 2 &&
-                            <div>
-                                {secondRequest.map((question, index) => (
-                                    <Box p={1}>
-                                        <Button onClick={() => {
-                                            setSelectedOption(true)
-                                            const newArray = secondRequest.map((question, indexQuestion) => ({
-                                                ...question,
-                                                selected: indexQuestion === index // Establece a true solo para el objeto seleccionado, a false para los demás
-                                            }));
-                                            setSecondRequest(newArray)
-                                        }} style={{ backgroundColor: question.selected ? colors.text.third : colors.text.secondary, paddingInline: "6px", paddingTop: "10px", paddingBottom: "10px", borderRadius: 15, borderColor: 'white', borderWidth: 1, textAlign: 'start' }}>
-                                            <Text color={colors.text.primary} fontSize={14} fontWeight={'700'}>{question.text}</Text>
-                                        </Button>
-                                    </Box>
-                                ))}
-                            </div>}
-                        {step === 3 &&
-                            <div>
-                                {thirdRequest.map((question, index) => (
-                                    <Box p={1}>
-                                        <Button onClick={() => {
-                                            setSelectedOption(true)
-                                            const newArray = thirdRequest.map((question, indexQuestion) => ({
-                                                ...question,
-                                                selected: indexQuestion === index // Establece a true solo para el objeto seleccionado, a false para los demás
-                                            }));
-                                            setThirdRequest(newArray)
-                                        }} style={{ backgroundColor: question.selected ? colors.text.third : colors.text.secondary, paddingInline: "6px", paddingTop: "10px", paddingBottom: "10px", borderRadius: 15, borderColor: 'white', borderWidth: 1, textAlign: 'start' }}>
-                                            <Text color={colors.text.primary} fontSize={14} fontWeight={'700'}>{question.text}</Text>
-                                        </Button>
-                                    </Box>
-                                ))}
-                            </div>}
-                        {step === 4 &&
-                            <div>
-                                {fourthRequest.map((question, index) => (
-                                    <Box p={1}>
-                                        <Button onClick={() => {
-                                            setSelectedOption(true)
-                                            const newArray = fourthRequest.map((question, indexQuestion) => ({
-                                                ...question,
-                                                selected: indexQuestion === index // Establece a true solo para el objeto seleccionado, a false para los demás
-                                            }));
-                                            setFourthRequest(newArray)
-                                        }} style={{ backgroundColor: question.selected ? colors.text.third : colors.text.secondary, paddingInline: "6px", paddingTop: "10px", paddingBottom: "10px", borderRadius: 15, borderColor: 'white', borderWidth: 1, textAlign: 'start' }}>
-                                            <Text color={colors.text.primary} fontSize={14} fontWeight={'700'}>{question.text}</Text>
-                                        </Button>
-                                    </Box>
-                                ))}
-                            </div>}
-                        {step === 5 &&
-                            <div>
-                                {fifthRequest.map((question, index) => (
-                                    <Box p={1}>
-                                        <Button onClick={() => {
-                                            setSelectedOption(true)
-                                            const newArray = fifthRequest.map((question, indexQuestion) => ({
-                                                ...question,
-                                                selected: indexQuestion === index // Establece a true solo para el objeto seleccionado, a false para los demás
-                                            }));
-                                            setFifthRequest(newArray)
-                                        }} style={{ backgroundColor: question.selected ? colors.text.third : colors.text.secondary, paddingInline: "6px", paddingTop: "10px", paddingBottom: "10px", borderRadius: 15, borderColor: 'white', borderWidth: 1, textAlign: 'start' }}>
-                                            <Text color={colors.text.primary} fontSize={14} fontWeight={'700'}>{question.text}</Text>
-                                        </Button>
-                                    </Box>
-                                ))}
-                            </div>}
-                    </Modal.Body>
-                    <Modal.Footer justifyContent={'center'}>
-                        {selectedOption &&
-                            <Button onClick={() => {
-                                handleNext()
-                            }} style={{ backgroundColor: colors.text.third, padding: "8px", borderRadius: 15, borderColor: 'white', borderWidth: 1 }}>
-                                <Text color={colors.text.primary} fontSize={20} fontWeight={'700'}>{step !== 5 ? "Siguiente" : "Entendido!"}</Text>
-                            </Button>}
-                    </Modal.Footer>
-                </Modal.Content>
-            </Modal> */}
-        </Box >
+                    </Box>
+                    <Modal isOpen={visibleFirstModal} size={'xl'}
+                        initialFocusRef={initialRef} finalFocusRef={finalRef}
+                    >
+                        <Modal.Content
+                            rounded={30}
+                        >
+                            <Modal.Header>
+
+                                <HStack space={8}
+                                    justifyContent={step !== 1 ? '' : 'center'}
+                                >
+                                    <Text textAlign={'center'} color={colors.text.primary} fontSize={20} bold>
+                                        {step === 1 && <Text>{firstQuestion}</Text>}
+                                        {step === 2 && <Text>{secondQuestion}</Text>}
+                                        {step === 3 && <Text>{thirdQuestion}</Text>}
+                                        {step === 4 && <Text>{fourthQuestion}</Text>}
+                                        {step === 5 && <Text>{fifthQuestion}</Text>}
+                                    </Text>
+                                </HStack>
+                            </Modal.Header>
+                            <Modal.Body>
+                                {step === 1 &&
+                                    <>
+                                        {firstRequest.map((question, index) => (
+                                            <Box p={1}>
+                                                <Button onPress={async () => {
+                                                    setSelectedOption(true)
+                                                    const newArray = firstRequest.map((question, indexQuestion) => ({
+                                                        ...question,
+                                                        selected: indexQuestion === index
+                                                    }));
+                                                    setFirstRequest(newArray)
+                                                }}
+                                                    bg={question.selected ? colors.text.third : colors.text.secondary}
+                                                    rounded={8}
+                                                    _pressed={{ bg: colors.text.third }}
+                                                >
+                                                    <Text textAlign={'center'} color={colors.text.primary} fontSize={14} fontWeight={'700'}>{question.text}</Text>
+                                                </Button>
+                                            </Box>
+                                        ))}
+                                    </>
+                                }
+                                {step === 2 &&
+                                    <>
+                                        {secondRequest.map((question, index) => (
+                                            <Box p={1}>
+                                                <Button onPress={async () => {
+                                                    setSelectedOption(true)
+                                                    const newArray = secondRequest.map((question, indexQuestion) => ({
+                                                        ...question,
+                                                        selected: indexQuestion === index // Establece a true solo para el objeto seleccionado, a false para los demás
+                                                    }));
+                                                    setSecondRequest(newArray)
+                                                }}
+                                                    bg={question.selected ? colors.text.third : colors.text.secondary}
+                                                    rounded={8}
+                                                    _pressed={{ bg: colors.text.third }}
+                                                >
+                                                    <Text textAlign={'center'} color={colors.text.primary} fontSize={14} fontWeight={'700'}>{question.text}</Text>
+                                                </Button>
+                                            </Box>
+                                        ))}
+                                    </>}
+                                {step === 3 &&
+                                    <>
+                                        {thirdRequest.map((question, index) => (
+                                            <Box p={1}>
+                                                <Button onPress={async () => {
+                                                    setSelectedOption(true)
+                                                    const newArray = thirdRequest.map((question, indexQuestion) => ({
+                                                        ...question,
+                                                        selected: indexQuestion === index // Establece a true solo para el objeto seleccionado, a false para los demás
+                                                    }));
+                                                    setThirdRequest(newArray)
+                                                }}
+                                                    bg={question.selected ? colors.text.third : colors.text.secondary}
+                                                    rounded={8}
+                                                    _pressed={{ bg: colors.text.third }}
+                                                >
+                                                    <Text textAlign={'center'} color={colors.text.primary} fontSize={14} fontWeight={'700'}>{question.text}</Text>
+                                                </Button>
+                                            </Box>
+                                        ))}
+                                    </>}
+                                {step === 4 &&
+                                    <>
+                                        {fourthRequest.map((question, index) => (
+                                            <Box p={1}>
+                                                <Button onPress={async () => {
+                                                    setSelectedOption(true)
+                                                    const newArray = fourthRequest.map((question, indexQuestion) => ({
+                                                        ...question,
+                                                        selected: indexQuestion === index // Establece a true solo para el objeto seleccionado, a false para los demás
+                                                    }));
+                                                    setFourthRequest(newArray)
+                                                }}
+                                                    bg={question.selected ? colors.text.third : colors.text.secondary}
+                                                    rounded={8}
+                                                    _pressed={{ bg: colors.text.third }}
+                                                >
+                                                    <Text textAlign={'center'} color={colors.text.primary} fontSize={14} fontWeight={'700'}>{question.text}</Text>
+                                                </Button>
+                                            </Box>
+                                        ))}
+                                    </>}
+                                {step === 5 &&
+                                    <>
+                                        {fifthRequest.map((question, index) => (
+                                            <Box p={1}>
+                                                <Button onPress={async () => {
+                                                    setSelectedOption(true)
+                                                    const newArray = fifthRequest.map((question, indexQuestion) => ({
+                                                        ...question,
+                                                        selected: indexQuestion === index // Establece a true solo para el objeto seleccionado, a false para los demás
+                                                    }));
+                                                    setFifthRequest(newArray)
+                                                }}
+                                                    bg={question.selected ? colors.text.third : colors.text.secondary}
+                                                    rounded={8}
+                                                    _pressed={{ bg: colors.text.third }}
+                                                >
+                                                    <Text color={colors.text.primary} fontSize={14} fontWeight={'700'}>{question.text}</Text>
+                                                </Button>
+                                            </Box>
+                                        ))}
+                                    </>}
+                            </Modal.Body>
+                            <Modal.Footer justifyContent={'center'}>
+                                {selectedOption &&
+                                    <Button onPress={async () => {
+                                        handleNext()
+                                    }} disabled={!selectedOption}
+                                        bg={colors.text.third}
+                                        px={6}
+                                        py={4}
+                                        rounded={8}
+                                        _pressed={{ bg: colors.text.secondary }}
+                                    >
+                                        <Text color={colors.text.primary} fontSize={20} fontWeight={'700'}>{step !== 5 ? "Siguiente" : "Entendido!"}</Text>
+                                    </Button>
+                                }
+                            </Modal.Footer>
+                        </Modal.Content>
+                    </Modal>
+                </ScrollView >
+            </Box >
+        </Box>
     );
 }
 

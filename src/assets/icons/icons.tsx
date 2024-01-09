@@ -31,4 +31,6 @@ export const icons = {
     fuegot5: require('./fuegot5.png'),
     extintort1: require('./extintor1.png'),
     extintort2: require('./extintor2.png'),
+    camera: require('./camera.png'),
+    threed: require('./3d.png')
 }
