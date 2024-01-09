@@ -5,6 +5,7 @@ import { useRef, useState } from 'react';
 import SceneNames from '../navigation/SceneNames';
 import { useNavigation } from '@react-navigation/native';
 import { GenericStackNavigationProp } from '../navigation/StackNavigationProp';
+import FloatingElement from '../components/FloatingElement';
 
 const PasScreen = () => {
     const { navigate } = useNavigation<GenericStackNavigationProp>();
@@ -262,6 +263,7 @@ const PasScreen = () => {
                     </Modal.Content>
                 </Modal>
             </Box >
+            <FloatingElement />
         </ScrollView >
     );
 }

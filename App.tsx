@@ -49,12 +49,8 @@ function App(): JSX.Element {
 
   const authScreens = () => (
     <>
-      <Stack.Screen
-        name={SceneNames.CaseFinishScreen}
-        component={CaseFinishScreen}
-        options={{ headerShown: false }}
-      />
-      {/* 
+
+
       <Stack.Screen
         name={SceneNames.LoginScreen}
         component={LoginScreen}
@@ -70,7 +66,11 @@ function App(): JSX.Element {
         component={CaseFirstScreen}
         options={{ headerShown: false }}
       />
-
+      <Stack.Screen
+        name={SceneNames.CaseFinishScreen}
+        component={CaseFinishScreen}
+        options={{ headerShown: false }}
+      />
       <Stack.Screen
         name={SceneNames.WoundsScreen}
         component={WoundsScreen}
@@ -80,12 +80,12 @@ function App(): JSX.Element {
         name={SceneNames.PasScreen}
         component={PasScreen}
         options={{ headerShown: false }}
-      /> */}
-      {/* <Stack.Screen
+      />
+      <Stack.Screen
         name={SceneNames.ViroScreen}
         component={ViroScreen}
         options={{ headerShown: false }}
-      /> */}
+      />
     </>
   );
   return (

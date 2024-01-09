@@ -1,4 +1,4 @@
-import { Box, Button, Center, ChevronLeftIcon, HStack, Image, Modal, ScrollView, Stack, Text, VStack } from 'native-base';
+import { Box, Button, Center, ChevronLeftIcon, HStack, Image, Modal, ScrollView, Stack, Text, VStack, View } from 'native-base';
 import { icons } from '../assets/icons/icons';
 import { colors } from '../assets/Colors';
 import { useEffect, useRef, useState } from 'react';
@@ -8,6 +8,8 @@ import { useNavigation } from '@react-navigation/native';
 import { GenericStackNavigationProp } from '../navigation/StackNavigationProp';
 import SceneNames from '../navigation/SceneNames';
 import LoaderElement from '../components/LoaderElement';
+import { Viro3DObject, ViroARImageMarker, ViroARScene, ViroARSceneNavigator, ViroAmbientLight, ViroAnimations } from '@viro-community/react-viro';
+import FloatingElement from '../components/FloatingElement';
 
 const CaseFinishScreen = () => {
     const { navigate } = useNavigation<GenericStackNavigationProp>();
@@ -150,6 +152,7 @@ const CaseFinishScreen = () => {
     return (
 
         <Box flex={1} safeArea bg={colors.text.secondary}>
+            <LoaderElement isLoading={loading} />
             <HStack justifyItems={'center'}>
                 <Button onPress={() => navigate(SceneNames.CoursesScreen)} alignItems={'center'} rounded={'full'} w={10} h={10} bg={'transparent'} _pressed={{ bg: colors.text.third }}
                 >
@@ -157,196 +160,228 @@ const CaseFinishScreen = () => {
                         size={'lg'} mt="0.5" color="white" />
                 </Button>
             </HStack>
-            <Box w={'full'} h={'full'} alignItems={'center'} p={6}>
 
-                <ScrollView>
-                    <LoaderElement isLoading={loading} />
+            {
+                !finishCase ?
+                    <ScrollView p={6}>
+                        <Box p={6} bg={colors.text.secondary} alignItems={'center'} borderColor={colors.text.primary} rounded={16} borderWidth={2} w={'full'} h={'full'} textAlign={'justify'} justifyContent={'center'}>
+                            <Box bg={colors.text.primary} rounded={10} px={10} py={4} mb={'5%'}>
+                                <Text bold fontSize={'xl'} color={colors.text.secondary}>{String(hours).padStart(2, '0')}:{String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}</Text>
+                            </Box>
+                            <Text fontSize={16} fontWeight={'500'} color={colors.text.primary}>Armando, un estudiante de sexto año de primaria, disfrutaba de su tiempo libre en el patio cuando descubrió un objeto brillante en el suelo. Al intentar recogerlo para examinarlo más de cerca, se cortó levemente. En cuestión de segundos, empezó a brotar sangre.</Text>
+                            <Text fontSize={16} fontWeight={'500'} color={colors.text.primary}>Descripción de la herida:
+                                Longitud de 3 cm y profundidad superficial.</Text>
+                            <Image source={icons.heridaCaso
+                            } resizeMode="stretch" alt="Alternate Text" size={'2xl'} />
 
-                    <Box bg={colors.text.secondary} alignItems={'center'} borderColor={colors.text.primary} rounded={16} borderWidth={2} w={'full'} h={'full'} textAlign={'justify'} p={6} justifyContent={'center'}>
-                        {
-                            !finishCase ?
-                                <>
-                                    <Box bg={colors.text.primary} rounded={10} px={10} py={4} mb={'5%'}>
-                                        <Text bold fontSize={'xl'} color={colors.text.secondary}>{String(hours).padStart(2, '0')}:{String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}</Text>
-                                    </Box>
-                                    <Text fontSize={16} fontWeight={'500'} color={colors.text.primary}>Armando, un estudiante de sexto año de primaria, disfrutaba de su tiempo libre en el patio cuando descubrió un objeto brillante en el suelo. Al intentar recogerlo para examinarlo más de cerca, se cortó levemente. En cuestión de segundos, empezó a brotar sangre.</Text>
-                                    <Text fontSize={16} fontWeight={'500'} color={colors.text.primary}>Descripción de la herida:
-                                        Longitud de 3 cm y profundidad superficial.</Text>
-                                    <Image source={icons.heridaCaso
-                                    } resizeMode="stretch" alt="Alternate Text" size={'2xl'} />
+                            <Button onPress={() => {
+                                startChrono()
+                                setVisibleFirstModal(true)
+                            }
+                            }
+                                bg={colors.text.third}
+                                px={6}
+                                py={4}
+                                rounded={8}
+                                mt={'10%'}
+                            >
+                                <Text color={colors.text.primary} fontSize={20} fontWeight={'700'}>{"Empezar!"}</Text>
+                            </Button>
+                        </Box>
+                    </ScrollView>
+                    :
+                    <>
+                        <View p={6}>
+                            <Box bg={colors.text.secondary} alignItems={'center'} borderColor={colors.text.primary} rounded={16} borderWidth={2} textAlign={'justify'} p={6} justifyContent={'center'}>
 
-                                    <Button onPress={() => {
-                                        startChrono()
-                                        setVisibleFirstModal(true)
-                                    }
-                                    }
-                                        bg={colors.text.third}
-                                        px={6}
-                                        py={4}
-                                        rounded={8}
-                                        mt={'10%'}
-                                    >
-                                        <Text color={colors.text.primary} fontSize={20} fontWeight={'700'}>{"Empezar!"}</Text>
-                                    </Button>
-                                </>
-                                :
-                                <>
-                                    <Text fontSize={20}>Listo! culminaste el caso practico.
-                                        Felicidades! </Text>
+                                <Text bold fontSize={20}>Listo! culminaste el caso practico.
+                                    Felicidades! </Text>
+                            </Box>
+                        </View>
+                        <ViroARSceneNavigator
+                            autofocus={true}
+                            initialScene={{
+                                scene: ViroSceneInitial,
+                            }}
+                        />
 
-                                </>
-                        }
-                    </Box>
-                    <Modal isOpen={visibleFirstModal} size={'xl'}
-                        initialFocusRef={initialRef} finalFocusRef={finalRef}
-                    >
-                        <Modal.Content
-                            rounded={30}
+                    </>
+            }
+            <Modal isOpen={visibleFirstModal} size={'xl'}
+                initialFocusRef={initialRef} finalFocusRef={finalRef}
+            >
+                <Modal.Content
+                    rounded={30}
+                >
+                    <Modal.Header>
+
+                        <HStack space={8}
+                            justifyContent={step !== 1 ? '' : 'center'}
                         >
-                            <Modal.Header>
-
-                                <HStack space={8}
-                                    justifyContent={step !== 1 ? '' : 'center'}
-                                >
-                                    <Text textAlign={'center'} color={colors.text.primary} fontSize={20} bold>
-                                        {step === 1 && <Text>{firstQuestion}</Text>}
-                                        {step === 2 && <Text>{secondQuestion}</Text>}
-                                        {step === 3 && <Text>{thirdQuestion}</Text>}
-                                        {step === 4 && <Text>{fourthQuestion}</Text>}
-                                        {step === 5 && <Text>{fifthQuestion}</Text>}
-                                    </Text>
-                                </HStack>
-                            </Modal.Header>
-                            <Modal.Body>
-                                {step === 1 &&
-                                    <>
-                                        {firstRequest.map((question, index) => (
-                                            <Box p={1}>
-                                                <Button onPress={async () => {
-                                                    setSelectedOption(true)
-                                                    const newArray = firstRequest.map((question, indexQuestion) => ({
-                                                        ...question,
-                                                        selected: indexQuestion === index
-                                                    }));
-                                                    setFirstRequest(newArray)
-                                                }}
-                                                    bg={question.selected ? colors.text.third : colors.text.secondary}
-                                                    rounded={8}
-                                                    _pressed={{ bg: colors.text.third }}
-                                                >
-                                                    <Text textAlign={'center'} color={colors.text.primary} fontSize={14} fontWeight={'700'}>{question.text}</Text>
-                                                </Button>
-                                            </Box>
-                                        ))}
-                                    </>
-                                }
-                                {step === 2 &&
-                                    <>
-                                        {secondRequest.map((question, index) => (
-                                            <Box p={1}>
-                                                <Button onPress={async () => {
-                                                    setSelectedOption(true)
-                                                    const newArray = secondRequest.map((question, indexQuestion) => ({
-                                                        ...question,
-                                                        selected: indexQuestion === index // Establece a true solo para el objeto seleccionado, a false para los demás
-                                                    }));
-                                                    setSecondRequest(newArray)
-                                                }}
-                                                    bg={question.selected ? colors.text.third : colors.text.secondary}
-                                                    rounded={8}
-                                                    _pressed={{ bg: colors.text.third }}
-                                                >
-                                                    <Text textAlign={'center'} color={colors.text.primary} fontSize={14} fontWeight={'700'}>{question.text}</Text>
-                                                </Button>
-                                            </Box>
-                                        ))}
-                                    </>}
-                                {step === 3 &&
-                                    <>
-                                        {thirdRequest.map((question, index) => (
-                                            <Box p={1}>
-                                                <Button onPress={async () => {
-                                                    setSelectedOption(true)
-                                                    const newArray = thirdRequest.map((question, indexQuestion) => ({
-                                                        ...question,
-                                                        selected: indexQuestion === index // Establece a true solo para el objeto seleccionado, a false para los demás
-                                                    }));
-                                                    setThirdRequest(newArray)
-                                                }}
-                                                    bg={question.selected ? colors.text.third : colors.text.secondary}
-                                                    rounded={8}
-                                                    _pressed={{ bg: colors.text.third }}
-                                                >
-                                                    <Text textAlign={'center'} color={colors.text.primary} fontSize={14} fontWeight={'700'}>{question.text}</Text>
-                                                </Button>
-                                            </Box>
-                                        ))}
-                                    </>}
-                                {step === 4 &&
-                                    <>
-                                        {fourthRequest.map((question, index) => (
-                                            <Box p={1}>
-                                                <Button onPress={async () => {
-                                                    setSelectedOption(true)
-                                                    const newArray = fourthRequest.map((question, indexQuestion) => ({
-                                                        ...question,
-                                                        selected: indexQuestion === index // Establece a true solo para el objeto seleccionado, a false para los demás
-                                                    }));
-                                                    setFourthRequest(newArray)
-                                                }}
-                                                    bg={question.selected ? colors.text.third : colors.text.secondary}
-                                                    rounded={8}
-                                                    _pressed={{ bg: colors.text.third }}
-                                                >
-                                                    <Text textAlign={'center'} color={colors.text.primary} fontSize={14} fontWeight={'700'}>{question.text}</Text>
-                                                </Button>
-                                            </Box>
-                                        ))}
-                                    </>}
-                                {step === 5 &&
-                                    <>
-                                        {fifthRequest.map((question, index) => (
-                                            <Box p={1}>
-                                                <Button onPress={async () => {
-                                                    setSelectedOption(true)
-                                                    const newArray = fifthRequest.map((question, indexQuestion) => ({
-                                                        ...question,
-                                                        selected: indexQuestion === index // Establece a true solo para el objeto seleccionado, a false para los demás
-                                                    }));
-                                                    setFifthRequest(newArray)
-                                                }}
-                                                    bg={question.selected ? colors.text.third : colors.text.secondary}
-                                                    rounded={8}
-                                                    _pressed={{ bg: colors.text.third }}
-                                                >
-                                                    <Text color={colors.text.primary} fontSize={14} fontWeight={'700'}>{question.text}</Text>
-                                                </Button>
-                                            </Box>
-                                        ))}
-                                    </>}
-                            </Modal.Body>
-                            <Modal.Footer justifyContent={'center'}>
-                                {selectedOption &&
-                                    <Button onPress={async () => {
-                                        handleNext()
-                                    }} disabled={!selectedOption}
-                                        bg={colors.text.third}
-                                        px={6}
-                                        py={4}
-                                        rounded={8}
-                                        _pressed={{ bg: colors.text.secondary }}
-                                    >
-                                        <Text color={colors.text.primary} fontSize={20} fontWeight={'700'}>{step !== 5 ? "Siguiente" : "Entendido!"}</Text>
-                                    </Button>
-                                }
-                            </Modal.Footer>
-                        </Modal.Content>
-                    </Modal>
-                </ScrollView >
-            </Box >
-        </Box>
+                            <Text textAlign={'center'} color={colors.text.primary} fontSize={20} bold>
+                                {step === 1 && <Text>{firstQuestion}</Text>}
+                                {step === 2 && <Text>{secondQuestion}</Text>}
+                                {step === 3 && <Text>{thirdQuestion}</Text>}
+                                {step === 4 && <Text>{fourthQuestion}</Text>}
+                                {step === 5 && <Text>{fifthQuestion}</Text>}
+                            </Text>
+                        </HStack>
+                    </Modal.Header>
+                    <Modal.Body>
+                        {step === 1 &&
+                            <>
+                                {firstRequest.map((question, index) => (
+                                    <Box p={1}>
+                                        <Button onPress={async () => {
+                                            setSelectedOption(true)
+                                            const newArray = firstRequest.map((question, indexQuestion) => ({
+                                                ...question,
+                                                selected: indexQuestion === index
+                                            }));
+                                            setFirstRequest(newArray)
+                                        }}
+                                            bg={question.selected ? colors.text.third : colors.text.secondary}
+                                            rounded={8}
+                                            _pressed={{ bg: colors.text.third }}
+                                        >
+                                            <Text textAlign={'center'} color={colors.text.primary} fontSize={14} fontWeight={'700'}>{question.text}</Text>
+                                        </Button>
+                                    </Box>
+                                ))}
+                            </>
+                        }
+                        {step === 2 &&
+                            <>
+                                {secondRequest.map((question, index) => (
+                                    <Box p={1}>
+                                        <Button onPress={async () => {
+                                            setSelectedOption(true)
+                                            const newArray = secondRequest.map((question, indexQuestion) => ({
+                                                ...question,
+                                                selected: indexQuestion === index // Establece a true solo para el objeto seleccionado, a false para los demás
+                                            }));
+                                            setSecondRequest(newArray)
+                                        }}
+                                            bg={question.selected ? colors.text.third : colors.text.secondary}
+                                            rounded={8}
+                                            _pressed={{ bg: colors.text.third }}
+                                        >
+                                            <Text textAlign={'center'} color={colors.text.primary} fontSize={14} fontWeight={'700'}>{question.text}</Text>
+                                        </Button>
+                                    </Box>
+                                ))}
+                            </>}
+                        {step === 3 &&
+                            <>
+                                {thirdRequest.map((question, index) => (
+                                    <Box p={1}>
+                                        <Button onPress={async () => {
+                                            setSelectedOption(true)
+                                            const newArray = thirdRequest.map((question, indexQuestion) => ({
+                                                ...question,
+                                                selected: indexQuestion === index // Establece a true solo para el objeto seleccionado, a false para los demás
+                                            }));
+                                            setThirdRequest(newArray)
+                                        }}
+                                            bg={question.selected ? colors.text.third : colors.text.secondary}
+                                            rounded={8}
+                                            _pressed={{ bg: colors.text.third }}
+                                        >
+                                            <Text textAlign={'center'} color={colors.text.primary} fontSize={14} fontWeight={'700'}>{question.text}</Text>
+                                        </Button>
+                                    </Box>
+                                ))}
+                            </>}
+                        {step === 4 &&
+                            <>
+                                {fourthRequest.map((question, index) => (
+                                    <Box p={1}>
+                                        <Button onPress={async () => {
+                                            setSelectedOption(true)
+                                            const newArray = fourthRequest.map((question, indexQuestion) => ({
+                                                ...question,
+                                                selected: indexQuestion === index // Establece a true solo para el objeto seleccionado, a false para los demás
+                                            }));
+                                            setFourthRequest(newArray)
+                                        }}
+                                            bg={question.selected ? colors.text.third : colors.text.secondary}
+                                            rounded={8}
+                                            _pressed={{ bg: colors.text.third }}
+                                        >
+                                            <Text textAlign={'center'} color={colors.text.primary} fontSize={14} fontWeight={'700'}>{question.text}</Text>
+                                        </Button>
+                                    </Box>
+                                ))}
+                            </>}
+                        {step === 5 &&
+                            <>
+                                {fifthRequest.map((question, index) => (
+                                    <Box p={1}>
+                                        <Button onPress={async () => {
+                                            setSelectedOption(true)
+                                            const newArray = fifthRequest.map((question, indexQuestion) => ({
+                                                ...question,
+                                                selected: indexQuestion === index // Establece a true solo para el objeto seleccionado, a false para los demás
+                                            }));
+                                            setFifthRequest(newArray)
+                                        }}
+                                            bg={question.selected ? colors.text.third : colors.text.secondary}
+                                            rounded={8}
+                                            _pressed={{ bg: colors.text.third }}
+                                        >
+                                            <Text color={colors.text.primary} fontSize={14} fontWeight={'700'}>{question.text}</Text>
+                                        </Button>
+                                    </Box>
+                                ))}
+                            </>}
+                    </Modal.Body>
+                    <Modal.Footer justifyContent={'center'}>
+                        {selectedOption &&
+                            <Button onPress={async () => {
+                                handleNext()
+                            }} disabled={!selectedOption}
+                                bg={colors.text.third}
+                                px={6}
+                                py={4}
+                                rounded={8}
+                                _pressed={{ bg: colors.text.secondary }}
+                            >
+                                <Text color={colors.text.primary} fontSize={20} fontWeight={'700'}>{step !== 5 ? "Siguiente" : "Entendido!"}</Text>
+                            </Button>
+                        }
+                    </Modal.Footer>
+                </Modal.Content>
+            </Modal>
+        </Box >
     );
 }
 
 
+const ViroSceneInitial = () => {
+    function onInitialized(state: any, reason: any) {
+        console.log('guncelleme', state, reason);
+    }
+    return (
+        <ViroARScene onTrackingUpdated={onInitialized}>
+            <ViroAmbientLight
+                color="#ffffff"
+            />
+            <Viro3DObject
+                scale={[0.1, 0.1, 0.1]}
+                rotation={[0, 0, 0]}
+                position={[0, -0.17, -0.4]}
+                source={require('../assets/res/tesla/bandaged_hand.glb')}
+                type="GLB"
+                animation={{ name: 'loopRotate', run: true, loop: true }} />
+        </ViroARScene >
+    );
+};
+ViroAnimations.registerAnimations({
+    loopRotate: {
+        properties: {
+            rotateY: "+=85"
+        },
+        duration: 1000
+    },
+});
 export default CaseFinishScreen;

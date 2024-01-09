@@ -5,6 +5,7 @@ import { useRef, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { GenericStackNavigationProp } from '../navigation/StackNavigationProp';
 import SceneNames from '../navigation/SceneNames';
+import FloatingElement from '../components/FloatingElement';
 
 const WoundsScreen = () => {
     const [visibleFirstModal, setVisibleFirstModal] = useState(false);
@@ -325,7 +326,7 @@ const WoundsScreen = () => {
                                 setVisibleThirdModal(false)
                                 setTimeout(() => {
                                     setStep3(1)
-                                    // navigate(SceneNames.CaseFinishScreen)
+                                    navigate(SceneNames.CaseFinishScreen)
                                 }, 1000);
                             }
                         }}
@@ -339,6 +340,7 @@ const WoundsScreen = () => {
                     </Modal.Footer>
                 </Modal.Content>
             </Modal>
+            <FloatingElement />
         </ScrollView >
     );
 }
