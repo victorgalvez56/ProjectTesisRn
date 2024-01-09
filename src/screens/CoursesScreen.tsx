@@ -55,6 +55,7 @@ const CoursesScreen = () => {
                     </HStack>
                 </Button>
                 <Button
+                    onPress={() => navigate(SceneNames.WoundsScreen)}
                     justifyContent={"flex-start"}
                     rounded={10}
                     w={'100%'}

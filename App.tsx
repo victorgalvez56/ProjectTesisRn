@@ -40,31 +40,8 @@ import CoursesScreen from './src/screens/CoursesScreen';
 import CaseFirstScreen from './src/screens/CaseFirstScreen';
 import CaseFinishScreen from './src/screens/CaseFinishScreen';
 import PasScreen from './src/screens/PasScreen';
-
-// const HelloWorldSceneAR = () => {
-//   const [text, setText] = useState('Initializing AR...');
-
-//   function onInitialized(state: any, reason: any) {
-//     console.log('guncelleme', state, reason);
-//     if (state === ViroTrackingStateConstants.TRACKING_NORMAL) {
-//       setText('Hello World!');
-//     }
-//     // else if (state === ViroConstants.TRACKING_NONE) {
-//     //   // Handle loss of tracking
-//     // }
-//   }
-
-//   return (
-//     <ViroARScene onTrackingUpdated={onInitialized}>
-//       <ViroText
-//         text={text}
-//         scale={[0.5, 0.5, 0.5]}
-//         position={[0, 0, -1]}
-//         style={styles.helloWorldTextStyle}
-//       />
-//     </ViroARScene>
-//   );
-// };
+import WoundsScreen from './src/screens/WoundsScreen';
+import ViroScreen from './src/screens/ViroScreen';
 
 function App(): JSX.Element {
   const Stack = createNativeStackNavigator();
@@ -72,8 +49,8 @@ function App(): JSX.Element {
   const authScreens = () => (
     <>
       <Stack.Screen
-        name={SceneNames.PasScreen}
-        component={PasScreen}
+        name={SceneNames.ViroScreen}
+        component={ViroScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen
@@ -96,11 +73,16 @@ function App(): JSX.Element {
         component={CaseFinishScreen}
         options={{ headerShown: false }}
       />
-      {/* <Stack.Screen
+      <Stack.Screen
+        name={SceneNames.WoundsScreen}
+        component={WoundsScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
         name={SceneNames.PasScreen}
         component={PasScreen}
         options={{ headerShown: false }}
-      /> */}
+      />
     </>
   );
   return (
@@ -111,13 +93,7 @@ function App(): JSX.Element {
         </Stack.Navigator>
       </NavigationContainer>
     </NativeBaseProvider>
-    // <ViroARSceneNavigator
-    //   autofocus={true}
-    //   initialScene={{
-    //     scene: HelloWorldSceneAR,
-    //   }}
-    //   style={styles.f1}
-    // />
+
   );
 }
 

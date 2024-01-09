@@ -1,4 +1,4 @@
-const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
+const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
 
 /**
  * Metro configuration
@@ -6,6 +6,16 @@ const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
  *
  * @type {import('metro-config').MetroConfig}
  */
-const config = {};
+const defaultAssetExts = require("metro-config/src/defaults/defaults").assetExts;
+
+const config =
+{
+    resolver: {
+        assetExts: [
+            ...defaultAssetExts, // <- array spreading defaults
+            "obj", "mtl", "JPG", "vrx", "hdr", "gltf", "glb", "bin", "arobject", "gif", "hdr"
+        ]
+    }
+}
 
 module.exports = mergeConfig(getDefaultConfig(__dirname), config);

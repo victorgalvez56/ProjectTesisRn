@@ -4,4 +4,6 @@ export type RootStackParamList = {
   CaseFirstScreen: undefined;
   CaseFinishScreen: undefined;
   PasScreen: undefined;
+  WoundsScreen: undefined;
+  ViroScreen: undefined;
 };

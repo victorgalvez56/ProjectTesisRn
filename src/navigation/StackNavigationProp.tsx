@@ -24,3 +24,11 @@ export type PasScreen = NativeStackNavigationProp<
     RootStackParamList,
     SceneNames.PasScreen
 >;
+export type WoundsScreen = NativeStackNavigationProp<
+    RootStackParamList,
+    SceneNames.WoundsScreen
+>;
+export type ViroScreen = NativeStackNavigationProp<
+    RootStackParamList,
+    SceneNames.ViroScreen
+>;

@@ -228,7 +228,7 @@ const PasScreen = () => {
                                 } resizeMode="contain" alt="Alternate Text" w={'100%'} h={250} />
                             </View>}
                             {step === 3 && <View>
-                                <Text textAlign={'center'}>
+                                <Text >
                                     No hará falta seguir explorando sus signos vitales ya que el corazón funciona seguro. En este momento se inicia la Evaluación Secundaria, siendo el procedimiento a seguir el control de las hemorragias, el tratamiento de las heridas y la inmovilización de las fracturas y, siempre que no sea traumático, el de colocarlo en una posición de seguridad para prevenir las posibles consecuencias de un vómito y la caída de la lengua hacia la faringe.
                                 </Text>
                             </View>}
@@ -236,7 +236,7 @@ const PasScreen = () => {
                             {step === 4 && <View>
                                 <Image source={icons.hepl2
                                 } resizeMode="contain" alt="Alternate Text" w={'100%'} h={250} />
-                                <Text textAlign={'center'}>En el caso de que el paciente respire pero sea traumático, NO LO MOVEREMOS. </Text>
+                                <Text >En el caso de que el paciente respire pero sea traumático, NO LO MOVEREMOS. </Text>
                             </View>}
                             {step === 5 && <View>
                                 <Text>Si al acercar nuestra mejilla o el dorso de nuestra mano a su boca, comprobamos que NO RESPIRA, en seguida y sin perder el tiempo aplicaremos la maniobra: FRENTE - MENTON</Text>
