@@ -78,26 +78,6 @@ const ViroSceneInitial = () => {
                 color="#ffffff"
             />
 
-            <ViroARImageMarker target={"bandage"}
-            >
-                <Viro3DObject
-                    scale={[0.1, 0.1, 0.1]}
-                    rotation={[270, 0, 120]}
-                    position={[0, 0, 0]}
-                    source={require('../assets/res/tesla/bandage.glb')}
-                    type="GLB"
-                />
-            </ViroARImageMarker>
-            <ViroARImageMarker target={"alcohol"}
-            >
-                <Viro3DObject
-                    scale={[0.8, 0.8, 0.8]}
-                    position={[0.2, 0, 0]}
-                    rotation={[90, 180, 90]}
-                    source={require('../assets/res/tesla/alcohol_bottle.glb')}
-                    type="GLB"
-                />
-            </ViroARImageMarker>
             <ViroARImageMarker target={"medicKit"}
             >
                 <ViroNode scale={[0, 0, 0]} transformBehaviors={["billboardY"]} animation={{ name: animName, run: playAnim, }}>
@@ -237,27 +217,11 @@ const ViroScreen = () => {
     );
 }
 ViroARTrackingTargets.createTargets({
-    bandage: {
-        source: require('../assets/res/bandage.png'),
-        orientation: "Up",
-        physicalWidth: 0.165
-    },
-    alcohol: {
-        source: require('../assets/res/alcohol.png'),
-        orientation: "Up",
-        physicalWidth: 0.165
-    },
     medicKit: {
         source: require('../assets/res/med-kit.jpg'),
         orientation: "Up",
         physicalWidth: 0.165
     },
-    gauze: {
-        source: require('../assets/res/med-kit.jpg'),
-        orientation: "Up",
-        physicalWidth: 0.165
-
-    }
 });
 
 
@@ -270,6 +234,17 @@ ViroMaterials.createMaterials({
     },
     sideMaterial: {
         diffuseColor: '#0000FF'
+    },
+});
+
+ViroAnimations.registerAnimations({
+    scaleUp: {
+        properties: { scaleX: 1, scaleY: 1, scaleZ: 1, },
+        duration: 500, easing: "bounce"
+    },
+    scaleDown: {
+        properties: { scaleX: 0, scaleY: 0, scaleZ: 0, },
+        duration: 200,
     },
 });
 const styles = StyleSheet.create({

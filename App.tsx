@@ -50,7 +50,6 @@ function App(): JSX.Element {
   const authScreens = () => (
     <>
 
-
       <Stack.Screen
         name={SceneNames.LoginScreen}
         component={LoginScreen}
