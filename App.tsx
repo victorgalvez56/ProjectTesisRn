@@ -6,31 +6,9 @@
  */
 
 import React, { useState } from 'react';
-import type { PropsWithChildren } from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
-  Text,
-  useColorScheme,
-  View,
 } from 'react-native';
-
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-import {
-  ViroARScene,
-  ViroText,
-  ViroTrackingStateConstants,
-  ViroARSceneNavigator,
-  ViroARTrackingReasonConstants
-} from '@viro-community/react-viro';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NativeBaseProvider, extendTheme } from 'native-base';
 import LoginScreen from './src/screens/LoginScreen';
@@ -42,7 +20,8 @@ import CaseFinishScreen from './src/screens/CaseFinishScreen';
 import PasScreen from './src/screens/PasScreen';
 import WoundsScreen from './src/screens/WoundsScreen';
 import ViroScreen from './src/screens/ViroScreen';
-import FloatingElement from './src/components/FloatingElement';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Reactotron from 'reactotron-react-native';
 
 function App(): JSX.Element {
   const Stack = createNativeStackNavigator();

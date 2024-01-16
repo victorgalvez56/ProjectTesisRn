@@ -1,5 +1,3 @@
-//TODO: Si es un service porque esta dentro de utils? Tiene su carpeta de services.
-
 export enum HttpMethod {
   GET = 'GET',
   POST = 'POST',
@@ -47,6 +45,5 @@ export async function myFetch<T extends FetchResponse>(
     })
     .catch((error: Error) => {
       errorHandler(error.message);
-      // crashlytics().recordError(error);
     });
 }

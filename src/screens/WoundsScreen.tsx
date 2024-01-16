@@ -1,4 +1,4 @@
-import { Box, Button, Center, CheckIcon, ChevronLeftIcon, Divider, HStack, Image, Modal, Pressable, ScrollView, Stack, Text, VStack, View } from 'native-base';
+import { Box, Button, ChevronLeftIcon, Divider, HStack, Image, Modal, ScrollView, Stack, Text, View } from 'native-base';
 import { icons } from '../assets/icons/icons';
 import { colors } from '../assets/Colors';
 import { useRef, useState } from 'react';
@@ -32,7 +32,6 @@ const WoundsScreen = () => {
     const handleBack = () => {
         setStep(prevStep => prevStep > 1 ? prevStep - 1 : prevStep);
     };
-
     const handleNext3 = () => {
         setStep3(prevStep => prevStep < 2 ? prevStep + 1 : prevStep);
     };
@@ -51,7 +50,9 @@ const WoundsScreen = () => {
                     space={3}
                 >
                     <HStack justifyItems={'center'}>
-                        <Button onPress={() => navigate(SceneNames.CoursesScreen)} alignItems={'center'} rounded={'full'} w={10} h={10} bg={'transparent'} _pressed={{ bg: colors.text.third }}
+                        <Button onPress={() => navigate(SceneNames.CoursesScreen)}
+                            alignItems={'center'} rounded={'full'} w={10} h={10} bg={'transparent'}
+                            _pressed={{ bg: colors.text.third }}
                         >
                             <ChevronLeftIcon
                                 size={'lg'} mt="0.5" color="white" />

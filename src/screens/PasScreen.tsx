@@ -1,4 +1,4 @@
-import { Box, Button, Center, CheckIcon, ChevronLeftIcon, Divider, HStack, Image, Modal, Pressable, ScrollView, Stack, Text, VStack, View } from 'native-base';
+import { Box, Button, ChevronLeftIcon, Divider, HStack, Image, Modal, ScrollView, Stack, Text, View } from 'native-base';
 import { icons } from '../assets/icons/icons';
 import { colors } from '../assets/Colors';
 import { useRef, useState } from 'react';
@@ -157,7 +157,6 @@ const PasScreen = () => {
                         </Modal.Footer>
                     </Modal.Content>
                 </Modal>
-
                 <Modal isOpen={visibleSecondModal} onClose={() => setVisibleSecondModal(false)}
                     initialFocusRef={initialRef} finalFocusRef={finalRef}
                 >
@@ -186,7 +185,6 @@ const PasScreen = () => {
                         </Modal.Footer>
                     </Modal.Content>
                 </Modal>
-
                 <Modal isOpen={visibleThirdModal}
                     initialFocusRef={initialRef} finalFocusRef={finalRef}
                 >
@@ -230,7 +228,9 @@ const PasScreen = () => {
                             </View>}
                             {step === 3 && <View>
                                 <Text >
-                                    No hará falta seguir explorando sus signos vitales ya que el corazón funciona seguro. En este momento se inicia la Evaluación Secundaria, siendo el procedimiento a seguir el control de las hemorragias, el tratamiento de las heridas y la inmovilización de las fracturas y, siempre que no sea traumático, el de colocarlo en una posición de seguridad para prevenir las posibles consecuencias de un vómito y la caída de la lengua hacia la faringe.
+                                    No hará falta seguir explorando sus signos vitales ya que el corazón funciona seguro.
+                                    En este momento se inicia la Evaluación Secundaria, siendo el procedimiento a seguir el control de las hemorragias, el tratamiento de las heridas y
+                                    la inmovilización de las fracturas y, siempre que no sea traumático, el de colocarlo en una posición de seguridad para prevenir las posibles consecuencias de un vómito y la caída de la lengua hacia la faringe.
                                 </Text>
                             </View>}
 

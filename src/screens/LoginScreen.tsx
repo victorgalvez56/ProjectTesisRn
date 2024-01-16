@@ -8,22 +8,6 @@ import { Alert, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import SceneNames from '../navigation/SceneNames';
 import { GenericStackNavigationProp } from '../navigation/StackNavigationProp';
-import {
-    ViroARScene,
-    ViroMaterials,
-    ViroNode,
-    ViroAnimations,
-    Viro3DObject,
-    ViroLightingEnvironment,
-    ViroARImageMarker,
-    ViroARTrackingTargets,
-    ViroSphere,
-    ViroSpotLight,
-    ViroQuad,
-    ViroTrackingStateConstants,
-    ViroText,
-    ViroARSceneNavigator,
-} from '@viro-community/react-viro';
 
 const LoginScreen = () => {
     const { navigate } = useNavigation<GenericStackNavigationProp>();
@@ -62,9 +46,7 @@ const LoginScreen = () => {
         }
         setLoading(false)
     }
-
     return (
-
         <Box safeArea bg={colors.text.primary} w={'full'} h={'100%'} justifyContent={'center'}
             alignItems={"center"} flex={1}>
             <LoaderElement isLoading={loading} />
@@ -91,16 +73,4 @@ const LoginScreen = () => {
         </Box>
     );
 }
-
-
 export default LoginScreen;
-const styles = StyleSheet.create({
-    f1: { flex: 1 },
-    helloWorldTextStyle: {
-        fontFamily: 'Arial',
-        fontSize: 30,
-        color: '#ffffff',
-        textAlignVertical: 'center',
-        textAlign: 'center',
-    },
-});
