@@ -21,7 +21,7 @@ export async function myFetch<T extends FetchResponse>(
   const parse = JSON.parse(pay);
   const payload = {...parse};
   const url =
-    'https://project-tesis-backend-hhezo.ondigitalocean.app/api/' + endpoint;
+    'https://backend.snapcode.app/api/' + endpoint;
   const body = method !== HttpMethod.GET ? {body: JSON.stringify(payload)} : {};
 
   const request = {
